@@ -10,6 +10,7 @@ from datetime import date
 from pathlib import Path
 from typing import List, Optional
 from urllib.parse import quote
+import os
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import FileResponse, Response
@@ -25,7 +26,7 @@ from app.services.docx_export import build_summary_docx
 
 router = APIRouter(prefix="/calls", tags=["calls"])
 
-FILES_DIR = BASE_DIR / "files"
+FILES_DIR = Path(os.getenv("FILES_DIR", str(BASE_DIR / "files")))
 
 DOCX_MEDIA_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
@@ -41,7 +42,7 @@ def _resolve_recording_path(call_link: str) -> Path:
     if p.is_absolute():
         return p
     if p.parts and p.parts[0] == "files":
-        return BASE_DIR / p
+        return FILES_DIR / p.relative_to("files")
     return FILES_DIR / p
 
 

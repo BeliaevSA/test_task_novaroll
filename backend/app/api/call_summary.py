@@ -7,6 +7,7 @@
 """
 
 import io
+import os
 from pathlib import Path
 
 import docx
@@ -28,6 +29,8 @@ from app.services.genapi_client import analyze_call_transcript
 
 
 router = APIRouter(prefix="/calls", tags=["call-summary"])
+
+FILES_DIR = Path(os.getenv("FILES_DIR", "files"))
 
 
 def _extract_text_from_docx(file_bytes: bytes) -> str:
@@ -276,15 +279,19 @@ async def rebuild_call_summary(
     # 3. Формируем путь к файлу
     #
     # call.call_link хранится, например:
-    # files/2024_09_10_10_00_ivanov.docx
+    # files/2026_09_20_11_15_ivanov.docx
     #
-    # Проект запускается из backend/, поэтому:
-    # backend/files/...
+    # В Docker FILES_DIR=/app/files.
     file_path = Path(call.call_link)
 
-    if not file_path.is_absolute():
-        project_root = Path(__file__).resolve().parents[3]
-        file_path = project_root / file_path
+    if file_path.is_absolute():
+        resolved_file_path = file_path
+    elif file_path.parts and file_path.parts[0] == "files":
+        resolved_file_path = FILES_DIR / file_path.relative_to("files")
+    else:
+        resolved_file_path = FILES_DIR / file_path
+
+    file_path = resolved_file_path
 
     # 4. Проверяем существование файла
     if not file_path.exists():
