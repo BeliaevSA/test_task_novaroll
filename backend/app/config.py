@@ -1,0 +1,19 @@
+"""
+Настройки приложения. Значения читаются из переменных окружения / файла .env.
+"""
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    # Ключ доступа к GenAPI
+    GEN_API_KEY: str
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+
+settings = Settings()

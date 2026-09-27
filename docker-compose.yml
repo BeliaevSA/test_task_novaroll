@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: call_summary_backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=sqlite:////app/db/calls.db
+      - FILES_DIR=/app/files
+    volumes:
+      - ./db:/app/db
+      - ./files:/app/files
+    ports:
+      - "8000:8000"
+    networks:
+      - call_summary_net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: call_summary_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+    networks:
+      - call_summary_net
+
+networks:
+  call_summary_net:
+    driver: bridge
