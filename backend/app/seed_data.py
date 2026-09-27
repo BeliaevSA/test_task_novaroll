@@ -42,41 +42,41 @@ def seed() -> None:
         calls = [
             # Иванов: 2 повторных звонка в одну организацию
             CallCreate(
-                call_datetime=datetime(2024, 9, 10, 10, 0),
+                call_datetime=datetime(2026, 9, 10, 10, 0),
                 organization="ООО Ромашка",
-                duration_seconds=1800,
+                duration_seconds=725,
                 manager_id=ivanov.id,
-                call_link="files/2024_09_10_10_00_ivanov.docx",
+                call_link="files/2026_09_10_10_00_ivanov.docx",
             ),
             CallCreate(
-                call_datetime=datetime(2024, 9, 15, 14, 30),
+                call_datetime=datetime(2026, 9, 15, 14, 30),
                 organization="ООО Ромашка",
-                duration_seconds=1200,
+                duration_seconds=649,
                 manager_id=ivanov.id,
-                call_link="files/2024_09_15_14_30_ivanov.docx",
+                call_link="files/2026_09_15_14_30_ivanov.docx",
             ),
             # Иванов: звонок в другую организацию
             CallCreate(
-                call_datetime=datetime(2024, 9, 20, 11, 15),
+                call_datetime=datetime(2026, 9, 20, 11, 15),
                 organization="ЗАО Вектор",
-                duration_seconds=900,
+                duration_seconds=525,
                 manager_id=ivanov.id,
-                call_link="files/2024_09_20_11_15_ivanov.docx",
+                call_link="files/2026_09_20_11_15_ivanov.docx",
             ),
             # Петров: 2 звонка в разные организации
             CallCreate(
-                call_datetime=datetime(2024, 9, 12, 9, 45),
+                call_datetime=datetime(2026, 9, 12, 9, 45),
                 organization="ООО Технологии",
-                duration_seconds=1500,
+                duration_seconds=581,
                 manager_id=petrov.id,
-                call_link="files/2024_09_12_09_45_petrov.docx",
+                call_link="files/2026_09_12_09_45_petrov.docx",
             ),
             CallCreate(
-                call_datetime=datetime(2024, 9, 18, 16, 0),
+                call_datetime=datetime(2026, 9, 18, 16, 0),
                 organization="ИП Сидоров",
-                duration_seconds=600,
+                duration_seconds=457,
                 manager_id=petrov.id,
-                call_link="files/2024_09_18_16_00_petrov.docx",
+                call_link="files/2026_09_18_16_00_petrov.docx",
             ),
         ]
 
