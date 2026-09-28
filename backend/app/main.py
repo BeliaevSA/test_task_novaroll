@@ -4,8 +4,9 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
-from app.database import Base, engine
+from app.database import FILES_DIR, Base, engine
 from app import models  # noqa: F401
 from app.api.call_summary import router as call_summary_router
 from app.api.calls import router as calls_router
@@ -15,6 +16,12 @@ from app.api.managers import router as managers_router
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Сводка по звонкам")
+
+# Отдаём содержимое /files "как есть" (напрямую по имени файла) —
+# используется, например, для ссылок на prompts.pdf и info.pdf в сайдбаре фронта.
+# Доступно по /files/<имя_файла> на backend, т.е. /api/files/<имя_файла> через nginx/Vite-прокси.
+# FILES_DIR учитывает переменную окружения FILES_DIR (см. docker-compose.yml).
+app.mount("/files", StaticFiles(directory=str(FILES_DIR)), name="files")
 
 # CORS нужен для локальной разработки фронта (npm run dev, порт 5173),
 # который обращается к backend напрямую, минуя nginx-прокси.

@@ -51,7 +51,18 @@
   padding: 4px 10px;
 }
 
+.sidebar__spacer {
+  flex: 1;
+}
+
+.sidebar__nav--bottom {
+  padding-top: 10px;
+  padding-bottom: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .sidebar__item {
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 12px;

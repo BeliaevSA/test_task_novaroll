@@ -10,7 +10,6 @@ from datetime import date
 from pathlib import Path
 from typing import List, Optional
 from urllib.parse import quote
-import os
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import FileResponse, Response
@@ -19,14 +18,12 @@ from sqlalchemy.orm import Session
 from app.crud.calls_crud import get_call, get_calls_filtered
 from app.crud.examples_crud import get_examples
 from app.crud.summaries_crud import get_summary_by_call_id
-from app.database import BASE_DIR, get_db
+from app.database import FILES_DIR, get_db
 from app.models import ExampleCategory
 from app.schemas import CallListOut, CallSummaryDetailOut, CategoryOut
 from app.services.docx_export import build_summary_docx
 
 router = APIRouter(prefix="/calls", tags=["calls"])
-
-FILES_DIR = Path(os.getenv("FILES_DIR", str(BASE_DIR / "files")))
 
 DOCX_MEDIA_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
@@ -35,14 +32,16 @@ def _resolve_recording_path(call_link: str) -> Path:
     """
     call_link может быть сохранён как:
     - относительный путь, уже включающий "files/..." ;
-    - просто имя файла (тогда ищем в BASE_DIR/files).
+    - просто имя файла (тогда ищем в FILES_DIR, с учётом переменной окружения FILES_DIR).
     - абсолютный путь.
     """
     p = Path(call_link)
     if p.is_absolute():
         return p
     if p.parts and p.parts[0] == "files":
-        return FILES_DIR / p.relative_to("files")
+        # отбрасываем префикс "files/" — реальный каталог уже в FILES_DIR
+        # (в Docker он смонтирован в /app/files, а не в <корень>/files)
+        return FILES_DIR / Path(*p.parts[1:])
     return FILES_DIR / p
 
 
